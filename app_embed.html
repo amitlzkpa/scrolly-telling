@@ -78,7 +78,15 @@
         Reset.addEventListener("click", async (evt) => {
           await janim.reset();
         });
-        
+
+        // ------------------------------------------------
+
+        let urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has("plotFile")) {
+          console.log("plotFile");
+          let plotFile = urlParams.get("plotFile");
+          console.log(plotFile);
+        }
 
       }
 
