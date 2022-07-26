@@ -5,25 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta property="iframely:title" content="ScrollyTelling">
-    <meta property="iframely:description" content="Stories that progress as you scroll">
-    <meta property="iframely:image" content="./ScrollyTelling-logo-512x512.jpeg">
+    <meta property="iframely:description" content="Interactive storytelling to tell a compelling, visual story">
+    <meta property="iframely:image" content="ScrollyTelling-logo-512x512.jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/index.css" />
     <title>ScrollyTelling</title>
-    <style>
-      html,
-      body {
-        height: 100%;
-        margin: 0px;
-        display: flex;
-        flex-direction: column;
-        font-family: courier;
-      }
-    </style>
   </head>
+  
   <body>
-    <div style="padding: 10px;">
-      Scrolly Telling
+    <header>
+      <div id="navbar-container">
+        <div>
+          <a href="/" style="text-decoration: none;">
+            ScrollyTelling
+          </a>
+        </div>
+
+        <div></div>
+
+        <div>
+          <div id="navbar-top-menu">
+            <span class="navbar-top-menu-item">
+              <a href="/app_embed.html">App</div>
+            </span>
+          </div>
+
+          <div id="navbar-list-menu-container">
+            <div id="hamburger-menu-icon">
+              <svg viewBox="0 0 140 100" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="10" rx="4" ry="4" width="80" height="20" style="fill: #929292" />
+                <rect x="20" y="40" rx="4" ry="4" width="80" height="20" style="fill: #929292" />
+                <rect x="20" y="70" rx="4" ry="4" width="80" height="20" style="fill: #929292" />
+              </svg>
+            </div>
+            <div id="navbar-list-menu-modal">
+              <span class="navbar-list-menu-item">
+                <a href="/app_embed.html">App</a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div>
+      <p style="padding: 0 0 0 2rem;">
+        Interactive storytelling to tell a compelling, visual story.
+      </p>
     </div>
-    <div id="threeContainer" style="flex: 1; width: 100%;" />
+
+    <div id="janimContainer" style="flex: 1; width: 100%;"></div>
+
+    <script type="module">
+      import Janim from "./janim/Janim.js";
+
+      async function main() {
+        let opts = {
+          containerId: "janimContainer",
+          autoUpdate: true,
+          clearColor: "#222222",
+          addGroundPlane: true,
+          addGrid: true,
+          // groundPlaneColor: "#dedede",
+          debugMode: true,
+        };
+
+        let janim = new Janim();
+
+        // await janim.initialize();
+        await janim.initialize(opts);
+
+        // ------------------------------------------------
+        
+
+      }
+
+      main();
+    </script>
   </body>
-  <script src="./ScrollyTelling.js" type="module"></script>
 </html>
