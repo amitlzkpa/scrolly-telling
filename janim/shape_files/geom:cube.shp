@@ -1,0 +1,3 @@
+geom: cube
+start: pos(0,0,0)
+end: pos(0,200,0)

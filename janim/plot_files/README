@@ -1,0 +1,19 @@
+# PlotFile Classes
+
+// transform
+// pos [] x, y, z
+// rot [] i, j, k, l
+// vis [] v
+
+
+// camera
+// isFixed: true
+// start: transform
+// end: transform
+// lerpFn: fn
+
+
+// cube
+// start: transform
+// end: transform
+// lerpFn: fn
