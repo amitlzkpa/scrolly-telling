@@ -82,10 +82,13 @@
         // ------------------------------------------------
 
         let urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has("plotFile")) {
-          console.log("plotFile");
-          let plotFile = urlParams.get("plotFile");
-          console.log(plotFile);
+
+        if (urlParams.has("vizType")) {
+          let vizType = urlParams.get("vizType");
+          let vizOpts = {
+            name: vizType
+          };
+          await janim.addViz(vizOpts);
         }
 
       }
