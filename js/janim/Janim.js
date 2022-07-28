@@ -8,6 +8,21 @@ import { UnrealBloomPass } from "https://cdn.skypack.dev/three@0.134.0/examples/
 import { ShaderPass } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/postprocessing/ShaderPass";
 import { FXAAShader } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/shaders/FXAAShader";
 
+import Axes3D from "./helpers/Axes3D.js";
+import Bars from "./visualizations/bars/Bars.js";
+import Particles from "./visualizations/particles/Particles.js";
+
+let vizTypesAvailable = [Bars, Particles];
+
+//-----------------------------------------------------------------------------
+
+let preInitEvt = new CustomEvent("janim-pre-init");
+let postInitEvt = new CustomEvent("janim-post-init");
+let preUpdateEvt = new CustomEvent("janim-pre-update");
+let postUpdateEvt = new CustomEvent("janim-post-update");
+let preAddVizEvt = new CustomEvent("janim-pre-add-viz");
+let postAddVizEvt = new CustomEvent("janim-post-add-viz");
+
 //-----------------------------------------------------------------------------
 
 /**
@@ -21,7 +36,6 @@ selectStyle
 */
 
 let defaultOpts = {
-  containerId: "janimContainer",
   clearColor: "#222222",
   debugMode: false,
   autoUpdate: true,
@@ -33,13 +47,11 @@ let defaultOpts = {
 //-----------------------------------------------------------------------------
 
 export default class Janim {
-
   //-----------------------------------------------------------------------------
 
   activeOpts = {};
 
   renderer;
-  container;
   scene;
   camera;
   controls;
@@ -48,21 +60,10 @@ export default class Janim {
   vizHelpers = [];
 
   async init() {
-    this.container = document.getElementById(this.activeOpts.containerId);
-    if (!this.container) {
-      let cont = document.createElement("div");
-      document.body.appendChild(cont);
-      cont.id = this.activeOpts.containerId;
-      cont.style.width = window.innerWidth + "px";
-      cont.style.height = window.innerHeight + "px";
-      this.container = cont;
-    }
     this.renderer = new THREE.WebGLRenderer();
-    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setClearColor(this.activeOpts.clearColor);
-    this.container.innerHTML = "";
-    this.container.appendChild( this.renderer.domElement );
-    
+    document.body.appendChild(this.renderer.domElement);
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(
       40,
@@ -70,7 +71,7 @@ export default class Janim {
       1,
       10000
     );
-    this.camera.position.set(2100, 1200, 1800);
+    this.camera.position.set(600, 600, 400);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.03;
@@ -99,6 +100,13 @@ export default class Janim {
       this.scene.add(groundPlane);
     }
 
+    if (this.activeOpts.addGrid) {
+      let ax3D = new Axes3D();
+      let o = await ax3D.init();
+      this.scene.add(o);
+      this.vizHelpers.push(ax3D);
+    }
+
     this.composer = new EffectComposer(this.renderer);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
 
@@ -113,8 +121,6 @@ export default class Janim {
     this.composer.addPass(fxaaPass);
 
     window.addEventListener("resize", this.onWindowResize, false);
-    this.onWindowResize();
-    this.linkToHTMLEvents();
   }
 
   async animate() {
@@ -125,20 +131,11 @@ export default class Janim {
 
   //-----------------------------------------------------------------------------
 
-  linkToHTMLEvents = () => {
-    document.addEventListener("janim-reset", async (e) => {
-      await this.initialize(this.activeOpts);
-    });
-  }
-
-  onWindowResize = () => {
-    // this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
+  onWindowResize() {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
-    // this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
-    // this.composer.setSize(window.innerWidth, window.innerHeight);
-    this.composer.setSize(this.container.clientWidth, this.container.clientHeight);
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.composer.setSize(window.innerWidth, window.innerHeight);
   }
 
   //-----------------------------------------------------------------------------
@@ -149,21 +146,20 @@ export default class Janim {
     @param {object} opts - Options for inialization.
     @example
       await janim.initialize({
-        containerId: "janimContainer",
-        autoUpdate: true,
         clearColor: "#222222",
-        addGroundPlane: true,
+        debugMode: false,
+        autoUpdate: true,
+        addGroundPlane: false,
         addGrid: true,
-        groundPlaneColor: "#dedede",
-        debugMode: true,
+        groundPlaneColor: "#2d2d2d",
       });
   */
   async initialize(opts) {
+    document.dispatchEvent(preInitEvt);
     this.activeOpts = { ...defaultOpts, ...(opts || {}) };
-    this.vizs = [];
-    this.clientObject3Ds = null;
     await this.init();
     this.animate();
+    document.dispatchEvent(postInitEvt);
 
     // setInterval(async () => {
     //   if (this.activeOpts.autoUpdate) await updateWorld();
@@ -179,23 +175,10 @@ export default class Janim {
 
   */
   async updateWorld() {
+    document.dispatchEvent(preUpdateEvt);
     this.vizs.forEach((g) => g.update(this.clientObject3Ds));
     this.vizHelpers.forEach((g) => g.update(this.clientObject3Ds));
-  }
-
-  /**
-    Reset the environment
-    Awaits till the instance is ready to be worked with.
-
-    @param {object} opts - Options for inialization.
-
-    @example
-      await janim.reset();
-
-  */
-  async reset() {
-    await this.initialize(this.activeOpts);
-    await this.updateWorld();
+    document.dispatchEvent(postUpdateEvt);
   }
 
   //-----------------------------------------------------------------------------
@@ -214,12 +197,14 @@ export default class Janim {
 
   */
   async addViz(opts) {
-    // let vizType = vizTypesAvailable.find((v) => v.name === opts.name);
-    // let vizInstance = new vizType();
-    // await this.registerVizToScene(vizInstance);
+    document.dispatchEvent(preAddVizEvt);
+    let vizType = vizTypesAvailable.find((v) => v.name === opts.name);
+    let vizInstance = new vizType();
+    await this.registerVizToScene(vizInstance);
 
-    // if (this.activeOpts.autoUpdate) await this.updateWorld();
-    // return vizInstance;
+    document.dispatchEvent(postAddVizEvt);
+    if (this.activeOpts.autoUpdate) await this.updateWorld();
+    return vizInstance;
   }
 
   //-----------------------------------------------------------------------------
@@ -234,11 +219,7 @@ export default class Janim {
     }
 
     this.vizs.push(vizInstance);
-    if (typeof vizInstance.init === "function") {
-      let o = await vizInstance.init(this.scene);
-      if (o) {
+    let o = await vizInstance.init();
         this.clientObject3Ds.add(o);
-      }
-    }
   }
 }
