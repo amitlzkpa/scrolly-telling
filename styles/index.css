@@ -10,7 +10,7 @@ body {
 /* NAVBAR */
 
 header {
-  min-height: 1rem;
+  min-height: 3rem;
   padding: 1rem;
   background-color: white;
 }
@@ -87,3 +87,12 @@ header {
   color: #838383;
 }
 
+
+
+.visible {
+  display: inline;
+}
+
+.hidden {
+  display: none;
+}
