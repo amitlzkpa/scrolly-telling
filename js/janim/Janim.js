@@ -1,12 +1,12 @@
-import * as THREE from "https://cdn.skypack.dev/three@0.134.0/build/three.module.js";
+import * as THREE from "https://cdn.skypack.dev/three@0.122.0/build/three.module.js";
 
-import { OrbitControls } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/controls/OrbitControls";
+import { OrbitControls } from "https://cdn.skypack.dev/three@0.122.0/examples/jsm/controls/OrbitControls";
 
-import { EffectComposer } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/postprocessing/EffectComposer";
-import { RenderPass } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/postprocessing/RenderPass";
-import { UnrealBloomPass } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/postprocessing/UnrealBloomPass.js";
-import { ShaderPass } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/postprocessing/ShaderPass";
-import { FXAAShader } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/shaders/FXAAShader";
+import { EffectComposer } from "https://cdn.skypack.dev/three@0.122.0/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "https://cdn.skypack.dev/three@0.122.0/examples/jsm/postprocessing/RenderPass";
+import { UnrealBloomPass } from "https://cdn.skypack.dev/three@0.122.0/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { ShaderPass } from "https://cdn.skypack.dev/three@0.122.0/examples/jsm/postprocessing/ShaderPass";
+import { FXAAShader } from "https://cdn.skypack.dev/three@0.122.0/examples/jsm/shaders/FXAAShader";
 
 import Axes3D from "./helpers/Axes3D.js";
 import Bars from "./visualizations/bars/Bars.js";

@@ -1,4 +1,4 @@
-import * as THREE from "https://cdn.skypack.dev/three@0.134.0/build/three.module.js";
+import * as THREE from "https://cdn.skypack.dev/three@0.122.0/build/three.module.js";
 
 /**
   Constructor used to create an instance of the Bars visualization.
