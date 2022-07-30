@@ -209,6 +209,25 @@ export default class Janim {
 
   //-----------------------------------------------------------------------------
 
+  defaultUpdateDataSateOpts = {};
+
+  /**
+    Update the state of data.
+    Awaits till the update is done.
+
+    @example
+      await janim.updateDataState();
+
+  */
+  async updateDataState(opts) {
+
+    let _opts = { ...defaultUpdateDataSateOpts, ...(opts || {}) };
+    console.log(_opts);
+
+  }
+
+  //-----------------------------------------------------------------------------
+
   vizs = [];
   clientObject3Ds = null;
 

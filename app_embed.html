@@ -129,6 +129,17 @@
           };
           await janim.addViz(vizOpts);
         }
+        
+        window.addEventListener("mousemove", (event) => {
+
+          let yRat = event.clientY / document.documentElement.clientHeight;
+          let updateDataStateOpts = {
+            varName: "yRat",
+            newVal: yRat
+          };
+          janim.updateDataState(updateDataStateOpts);
+          
+        });
 
       }
 
