@@ -166,6 +166,8 @@ export default class Janim {
     // }, 400);
   }
 
+  //-----------------------------------------------------------------------------
+
   /**
     Update the environment
     Awaits till the update is done.
@@ -180,8 +182,6 @@ export default class Janim {
     this.vizHelpers.forEach((g) => g.update(this.clientObject3Ds));
     document.dispatchEvent(postUpdateEvt);
   }
-
-  //-----------------------------------------------------------------------------
 
   /**
     Add a visualization to the environment
