@@ -11,8 +11,9 @@ import { FXAAShader } from "https://cdn.skypack.dev/three@0.122.0/examples/jsm/s
 import Axes3D from "./helpers/Axes3D.js";
 import Bars from "./visualizations/bars/Bars.js";
 import Particles from "./visualizations/particles/Particles.js";
+import Cube from "./visualizations/movement/basic/Cube.js";
 
-let vizTypesAvailable = [Bars, Particles];
+let vizTypesAvailable = [Bars, Particles, Cube];
 
 //-----------------------------------------------------------------------------
 
@@ -221,8 +222,8 @@ export default class Janim {
   */
   async updateDataState(opts) {
 
-    let _opts = { ...defaultUpdateDataSateOpts, ...(opts || {}) };
-    console.log(_opts);
+    let _opts = { ...this.defaultUpdateDataSateOpts, ...(opts || {}) };
+    this.vizs.forEach(v => v.updateDataState(_opts));
 
   }
 
