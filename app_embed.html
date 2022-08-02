@@ -129,17 +129,24 @@
           };
           await janim.addViz(vizOpts);
         }
-        
-        window.addEventListener("mousemove", (event) => {
 
-          let yRat = event.clientY / document.documentElement.clientHeight;
-          let updateDataStateOpts = {
-            varName: "yRat",
-            newVal: yRat
-          };
-          janim.updateDataState(updateDataStateOpts);
+        let updateOpts = {
+          val: 27,
+          duration: 2000
+        };
+
+        await janim.updateDataState(updateOpts);
+
+        // window.addEventListener("mousemove", (event) => {
+
+        //   let yRat = event.clientY / document.documentElement.clientHeight;
+        //   let updateDataStateOpts = {
+        //     varName: "yRat",
+        //     newVal: yRat
+        //   };
+        //   janim.updateDataState(updateDataStateOpts);
           
-        });
+        // });
 
       }
 
