@@ -30,6 +30,14 @@ function fallback_viz_updateDataState() {
   console.log("fallback_viz_updateDataState");
 }
 
+function fallback_viz_init() {
+  console.log("fallback_viz_init");
+}
+
+function fallback_viz_update() {
+  console.log("fallback_viz_update");
+}
+
 //-----------------------------------------------------------------------------
 
 /**
@@ -217,6 +225,16 @@ export default class Janim {
     if (!("updateDataState" in vizInstance)) {
       // console.log(`Applying fallback_viz_updateDataState to ${vizInstance.constructor.name}`);
       vizInstance.updateDataState = fallback_viz_updateDataState;
+    }
+
+    if (!("init" in vizInstance)) {
+      // console.log(`Applying fallback_viz_init to ${vizInstance.constructor.name}`);
+      vizInstance.init = fallback_viz_init;
+    }
+
+    if (!("update" in vizInstance)) {
+      // console.log(`Applying fallback_viz_update to ${vizInstance.constructor.name}`);
+      vizInstance.update = fallback_viz_update;
     }
 
     await this.registerVizToScene(vizInstance);
