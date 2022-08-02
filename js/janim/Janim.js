@@ -54,6 +54,12 @@ let defaultOpts = {
 //-----------------------------------------------------------------------------
 
 export default class Janim {
+  static cleanupVizArgObj(inArgs) {
+    console.log(inArgs);
+    inArgs.c = true;
+    return inArgs;
+  }
+
   //-----------------------------------------------------------------------------
 
   activeOpts = {};
