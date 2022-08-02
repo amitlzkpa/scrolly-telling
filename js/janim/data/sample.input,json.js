@@ -14,6 +14,17 @@ let strInp =
 
 
 
+// input formats
+// full
+{
+  "vizType": "Particles",
+  "datasets": "[{ \"foo\": \"bar\" }]",
+  "motionTrigger": "scrollY",
+  "tweenMethod": "linear"
+}
+
+
+
 lerp
 - scrollX
 - scrollY
