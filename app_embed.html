@@ -95,6 +95,14 @@
         });
       });
 
+      
+      let defaultArgs = { 
+        vizType: "Bars",
+        datasets: "{ data:[] }",
+        motionTrigger: "scrollY",
+        tweenMethod: "linear"
+       };
+
       async function main() {
         let opts = {
           containerId: "janimContainer",
@@ -121,32 +129,31 @@
         // ------------------------------------------------
 
         let urlParams = new URLSearchParams(window.location.search);
-
-        if (urlParams.has("vizType")) {
-          let vizType = urlParams.get("vizType");
-          let vizOpts = {
-            name: vizType
-          };
-          await janim.addViz(vizOpts);
-        }
-
-        let updateOpts = {
-          val: 27,
-          duration: 2000
+        let parsedArgsFmUrl = {
+          vizType: urlParams.get("vizType"),
+          datasets: urlParams.get("datasets"),
+          motionTrigger: urlParams.get("motionTrigger"),
+          tweenMethod: urlParams.get("tweenMethod")
+        };
+        let compiledArgsObj = { ...parsedArgsFmUrl, ...defaultArgs };
+        let cleanedUpArgsObj = Janim.cleanupVizArgObj(compiledArgsObj);
+        let vizOpts = {
+          name: cleanedUpArgsObj.vizType
         };
 
-        await janim.updateDataState(updateOpts);
+        await janim.addViz(vizOpts);
+        
+        window.addEventListener("mousemove", (event) => {
 
-        // window.addEventListener("mousemove", (event) => {
+          let yRat = event.clientY / document.documentElement.clientHeight;
+          let updateDataStateOpts = {
+            varName: "yRat",
+            newVal: yRat,
+            duration: 2000
+          };
+          janim.updateDataState(updateDataStateOpts);
 
-        //   let yRat = event.clientY / document.documentElement.clientHeight;
-        //   let updateDataStateOpts = {
-        //     varName: "yRat",
-        //     newVal: yRat
-        //   };
-        //   janim.updateDataState(updateDataStateOpts);
-          
-        // });
+        });
 
       }
 
