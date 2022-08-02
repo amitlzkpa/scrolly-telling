@@ -246,7 +246,12 @@ export default class Janim {
 
   //-----------------------------------------------------------------------------
 
-  defaultUpdateDataSateOpts = {};
+
+  async setDataset(inDatasetObj) {
+
+  }
+
+  defaultUpdateDataStateOpts = {};
 
   /**
     Update the state of data.
@@ -258,7 +263,7 @@ export default class Janim {
   */
   async updateDataState(opts) {
 
-    let _opts = { ...this.defaultUpdateDataSateOpts, ...(opts || {}) };
+    let _opts = { ...this.defaultUpdateDataStateOpts, ...(opts || {}) };
     this.vizs.forEach(v => v.updateDataState(_opts));
 
   }
