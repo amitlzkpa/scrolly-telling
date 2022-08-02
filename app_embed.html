@@ -140,20 +140,23 @@
         let vizOpts = {
           name: cleanedUpArgsObj.vizType
         };
-
         await janim.addViz(vizOpts);
         
-        window.addEventListener("mousemove", (event) => {
-
-          let yRat = event.clientY / document.documentElement.clientHeight;
-          let updateDataStateOpts = {
-            varName: "yRat",
-            newVal: yRat,
-            duration: 2000
-          };
-          janim.updateDataState(updateDataStateOpts);
-
-        });
+        let updateDataStateOpts = {
+          varName: "yRatio",
+          newVal: 42,
+          duration: 2000
+        };
+        janim.updateDataState(updateDataStateOpts);
+        
+        // window.addEventListener("mousemove", (event) => {
+        //   let yRat = event.clientY / document.documentElement.clientHeight;
+        //   let updateDataStateOpts = {
+        //     varName: "yRat",
+        //     newVal: yRat,
+        //     duration: 2000
+        //   };
+        // });
 
       }
 
