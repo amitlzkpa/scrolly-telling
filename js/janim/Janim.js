@@ -26,6 +26,12 @@ let postAddVizEvt = new CustomEvent("janim-post-add-viz");
 
 //-----------------------------------------------------------------------------
 
+function fallback_viz_updateDataState() {
+  console.log("fallback_viz_updateDataState");
+}
+
+//-----------------------------------------------------------------------------
+
 /**
 background color
 ground
@@ -201,6 +207,12 @@ export default class Janim {
     document.dispatchEvent(preAddVizEvt);
     let vizType = vizTypesAvailable.find((v) => v.name === opts.name);
     let vizInstance = new vizType();
+
+    if (!("updateDataState" in vizInstance)) {
+      // console.log(`Applying fallback_viz_updateDataState to ${vizInstance.constructor.name}`);
+      vizInstance.updateDataState = fallback_viz_updateDataState;
+    }
+
     await this.registerVizToScene(vizInstance);
 
     document.dispatchEvent(postAddVizEvt);
