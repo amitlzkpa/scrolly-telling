@@ -105,7 +105,7 @@
          { x: 20, y: 20, z: 10 }
         ]
       };
-      
+
       let defaultArgs = { 
         vizType: "Bars",
         motionTrigger: "scrollY",
@@ -156,10 +156,20 @@
         
         // ------------------------------------------------
 
+        let updVal = {
+          data: [
+          { x: 10, y: 10, z: 6 },
+          { x: 10, y: 20, z: 2 },
+          { x: 20, y: 10, z: 13 },
+          { x: 20, y: 20, z: 4 }
+          ]
+        };
+
         let updateDataStateOpts = {
-          varName: "yRatio",
-          newVal: 42,
-          duration: 2000
+          tgtLabel: "sample-dataset",
+          newVal: updVal,
+          tweenDuration: 2000,
+          delay: 0,
         };
         janim.setDatasetState(updateDataStateOpts);
         

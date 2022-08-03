@@ -49,4 +49,10 @@ export default class Bars {
   }
 
   async update(scObj) {}
+
+  async updateDataState(opts) {
+    console.log("updateDataState");
+    console.log(opts);
+    // this.vizObj.position.set(0, (this.size / 2) + (this.size * opts.newVal), 0);
+  }
 }

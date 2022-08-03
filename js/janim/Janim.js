@@ -268,20 +268,27 @@ export default class Janim {
     // check if vizs need to be updated
   }
 
-  defaultUpdateDataStateOpts = {};
+  defaultUpdateDataStateOpts = {
+    data: [
+      { x: 10, y: 10, z: 6 },
+      { x: 10, y: 20, z: 2 },
+      { x: 20, y: 10, z: 13 },
+      { x: 20, y: 20, z: 4 }
+    ]
+  };
 
   /**
     Update the state of data.
     Awaits till the update is done.
 
     @example
-      await janim.updateDataState();
+      await janim.setDatasetState(updateDataStateOpts);
 
   */
   async setDatasetState(opts) {
 
     let _opts = { ...this.defaultUpdateDataStateOpts, ...(opts || {}) };
-    // this.vizs.forEach(v => v.updateDataState(_opts));
+    this.vizs.forEach(v => v.updateDataState(_opts));
 
   }
 
