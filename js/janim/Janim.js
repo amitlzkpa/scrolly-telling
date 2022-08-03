@@ -290,7 +290,7 @@ export default class Janim {
       stateB: stateUpdateOpts.newVal
     });
 
-    console.log("needsUpdate", needsUpdate);
+    console.log("state changed needsUpdate", needsUpdate);
 
     if (needsUpdate) {
       let mergedUpdateOpts = { ...this.defaultUpdateOpts, ...(stateUpdateOpts.updateOpts || {}) };

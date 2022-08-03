@@ -176,7 +176,7 @@
         await janim.setDatasetState(updateDataStateOpts);
 
         let newDatasetState = JSON.parse(JSON.stringify(updateDataStateOpts));
-        // newDatasetState.newVal.data[0].z = 12;
+        newDatasetState.newVal.data[0].z = 12;
         await janim.setDatasetState(newDatasetState);
         
         // window.addEventListener("mousemove", (event) => {

@@ -1,5 +1,13 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.122.0/build/three.module.js";
 
+function stateToVizConfig(state) {
+  let sides = Math.floor(Math.sqrt(state.data.length))
+  let configVars = {
+    barCount: sides
+  };
+  return configVars;
+}
+
 /**
   Constructor used to create an instance of the Bars visualization.
   @return {Particles} An instance of the Bars visualization.
@@ -60,6 +68,9 @@ export default class Bars {
     console.log("oldState", stateChangeOpts.oldState);
     console.log("newState", stateChangeOpts.newState);
     console.log("updateOpts", stateChangeOpts.updateOpts);
+
+    let newVizConfig = stateToVizConfig(stateChangeOpts.newState);
+    console.log(newVizConfig);
 
     await this.update(this.vizObj);
     
