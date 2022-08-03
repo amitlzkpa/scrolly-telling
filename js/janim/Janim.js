@@ -38,6 +38,16 @@ function fallback_viz_update() {
   console.log("fallback_viz_update");
 }
 
+
+let datasetUtils = {
+  containsCheck(srcCollection, itemToCheck) {
+    return false;
+  },
+  cleanupDatasetInput(datasetObj) {
+    return datasetObj;
+  }
+}
+
 //-----------------------------------------------------------------------------
 
 /**
@@ -246,23 +256,14 @@ export default class Janim {
 
   //-----------------------------------------------------------------------------
 
-  datasetUtils = {
-    containsCheck(srcCollection, itemToCheck) {
-      return false;
-    },
-    cleanupDatasetInput(datasetObj) {
-      return datasetObj;
-    }
-  }
-
   datasetOriginals = [];
   activeDatasets = [];
 
   async addDataset(datasetObj) {
     let cleanedUpInput = datasetUtils.cleanupDatasetInput(datasetObj);
     if (!datasetUtils.containsCheck(this.activeDatasets, cleanedUpInput)) {
-      datasetOriginals.push(JSON.parse(JSON.stringify(cleanedUpInput)));
-      activeDatasets.push(JSON.parse(JSON.stringify(cleanedUpInput)));
+      this.datasetOriginals.push(JSON.parse(JSON.stringify(cleanedUpInput)));
+      this.activeDatasets.push(JSON.parse(JSON.stringify(cleanedUpInput)));
     }
     // check if vizs need to be updated
   }
@@ -277,10 +278,10 @@ export default class Janim {
       await janim.updateDataState();
 
   */
-  async updateDataState(opts) {
+  async setDatasetState(opts) {
 
     let _opts = { ...this.defaultUpdateDataStateOpts, ...(opts || {}) };
-    this.vizs.forEach(v => v.updateDataState(_opts));
+    // this.vizs.forEach(v => v.updateDataState(_opts));
 
   }
 

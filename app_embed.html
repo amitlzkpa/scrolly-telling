@@ -96,7 +96,7 @@
       });
 
       let sampleDataset = {
-        uuid: "",
+        uuid: "aeb88c91-13c5-4c2d-9dbe-033f7930d5ce",
         label: "sample-dataset",
         data: [
          { x: 10, y: 10, z: 4 },
@@ -144,7 +144,6 @@
         let urlParams = new URLSearchParams(window.location.search);
         let parsedArgsFmUrl = {
           vizType: urlParams.get("vizType"),
-          datasets: urlParams.get("datasets"),
           motionTrigger: urlParams.get("motionTrigger"),
           tweenMethod: urlParams.get("tweenMethod")
         };
@@ -155,12 +154,14 @@
         };
         await janim.addViz(vizOpts);
         
+        // ------------------------------------------------
+
         let updateDataStateOpts = {
           varName: "yRatio",
           newVal: 42,
           duration: 2000
         };
-        janim.updateDataState(updateDataStateOpts);
+        janim.setDatasetState(updateDataStateOpts);
         
         // window.addEventListener("mousemove", (event) => {
         //   let yRat = event.clientY / document.documentElement.clientHeight;
