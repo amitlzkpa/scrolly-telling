@@ -85,6 +85,10 @@ export default class Bars {
     let newVizConfig = stateToVizConfig(stateChangeOpts.newState);
     console.log(newVizConfig);
 
-    await this.update(this.vizObj);
+    console.log(this.barCount);
+    this.barCount = newVizConfig.barCount;
+    console.log(this.barCount);
+
+    await this.init(this._scene);
   }
 }
