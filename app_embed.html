@@ -95,6 +95,16 @@
         });
       });
 
+      let sampleDataset = {
+        uuid: "",
+        label: "sample-dataset",
+        data: [
+         { x: 10, y: 10, z: 4 },
+         { x: 10, y: 20, z: 7 },
+         { x: 20, y: 10, z: 3 },
+         { x: 20, y: 20, z: 10 }
+        ]
+      };
       
       let defaultArgs = { 
         vizType: "Bars",
@@ -125,6 +135,10 @@
         Reset.addEventListener("click", async (evt) => {
           await janim.reset();
         });
+
+        // ------------------------------------------------
+
+        await janim.addDataset(sampleDataset);
 
         // ------------------------------------------------
 

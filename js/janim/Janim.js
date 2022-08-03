@@ -246,9 +246,25 @@ export default class Janim {
 
   //-----------------------------------------------------------------------------
 
+  datasetUtils = {
+    containsCheck(srcCollection, itemToCheck) {
+      return false;
+    },
+    cleanupDatasetInput(datasetObj) {
+      return datasetObj;
+    }
+  }
 
-  async setDataset(inDatasetObj) {
+  datasetOriginals = [];
+  activeDatasets = [];
 
+  async addDataset(datasetObj) {
+    let cleanedUpInput = datasetUtils.cleanupDatasetInput(datasetObj);
+    if (!datasetUtils.containsCheck(this.activeDatasets, cleanedUpInput)) {
+      datasetOriginals.push(JSON.parse(JSON.stringify(cleanedUpInput)));
+      activeDatasets.push(JSON.parse(JSON.stringify(cleanedUpInput)));
+    }
+    // check if vizs need to be updated
   }
 
   defaultUpdateDataStateOpts = {};
