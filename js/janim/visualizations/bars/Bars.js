@@ -22,6 +22,11 @@ export default class Bars {
   }
 
   async init(scene) {
+
+    // if (this.vizObj) {
+    //   this._scene.remove(this.vizObj);
+    // }
+
     this._scene = scene;
     this.vizObj = new THREE.Object3D();
 
@@ -53,6 +58,15 @@ export default class Bars {
   async updateDataState(opts) {
     console.log("updateDataState");
     console.log(opts);
+    console.log(this.spacing);
+    this.spacing = 40;
+    console.log(this.spacing);
+    // let newBarsTotal = Math.sqrt(opts.data.length);
+    // console.log("newBarsTotal", newBarsTotal);
+    // let newBarCount = opts.data.length;
+    // console.log("newBarCount", newBarCount);
+
+    await this.init(this._scene);
     // this.vizObj.position.set(0, (this.size / 2) + (this.size * opts.newVal), 0);
   }
 }
