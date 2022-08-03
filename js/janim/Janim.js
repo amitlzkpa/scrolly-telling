@@ -12,7 +12,7 @@ import Axes3D from "./helpers/Axes3D.js";
 import Bars from "./visualizations/bars/Bars.js";
 import Particles from "./visualizations/particles/Particles.js";
 import Cube from "./visualizations/movement/basic/Cube.js";
-import utils from "./utils/index.js";
+import * as utils from "./utils/index.js";
 
 let vizTypesAvailable = [Bars, Particles, Cube];
 

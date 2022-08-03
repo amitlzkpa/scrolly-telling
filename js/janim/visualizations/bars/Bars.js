@@ -1,4 +1,5 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.122.0/build/three.module.js";
+import * as utils from "../../utils/index.js";
 
 function stateToVizConfig(state) {
   let sides = 8;
@@ -85,9 +86,25 @@ export default class Bars {
     let newVizConfig = stateToVizConfig(stateChangeOpts.newState);
     console.log(newVizConfig);
 
-    console.log(this.barCount);
-    this.barCount = newVizConfig.barCount;
-    console.log(this.barCount);
+    let tweenRate = 100;
+    let tweenDuration = stateChangeOpts.updateOpts.tweenDuration;
+    let delay = stateChangeOpts.updateOpts.delay;
+
+    await utils.wait(delay);
+
+    let tweenElapsed = 0;
+    console.log("start", tweenElapsed);
+    while(tweenElapsed <= tweenDuration) {
+      let i = tweenElapsed / tweenDuration;
+      tweenElapsed += tweenRate;
+      console.log(i.toFixed(2), tweenElapsed, tweenDuration);
+      await utils.wait(tweenRate);
+    }
+    console.log("done", tweenElapsed);
+
+    // console.log(this.barCount);
+    // this.barCount = newVizConfig.barCount;
+    // console.log(this.barCount);
 
     await this.init(this._scene);
   }
