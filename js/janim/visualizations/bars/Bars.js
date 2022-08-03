@@ -83,8 +83,8 @@ export default class Bars {
     console.log("newState", stateChangeOpts.newState);
     console.log("updateOpts", stateChangeOpts.updateOpts);
 
-    let newVizConfig = stateToVizConfig(stateChangeOpts.newState);
-    console.log(newVizConfig);
+    // let newVizConfig = stateToVizConfig(stateChangeOpts.newState);
+    // console.log(newVizConfig);
 
     let tweenRate = 100;
     let tweenDuration = stateChangeOpts.updateOpts.tweenDuration;
@@ -92,15 +92,25 @@ export default class Bars {
 
     await utils.wait(delay);
 
+    // CONTINUE HERE: check timetweening between start, end vals based on tweenDuration and tweenRate
     let tweenElapsed = 0;
-    console.log("start", tweenElapsed);
+    // let start = stateChangeOpts.oldState.data.length;
+    let start = this.barCount;
+    let end = stateChangeOpts.newState.data.length;
+    let span = end - start;
+    let isDecreasing = end < start;
+    console.log("start", tweenElapsed, start);
     while(tweenElapsed <= tweenDuration) {
       let i = tweenElapsed / tweenDuration;
+      let spanI = i * span;
+
+      let c = spanI + ((isDecreasing ? 1 : -1) * start);
+
       tweenElapsed += tweenRate;
-      console.log(i.toFixed(2), tweenElapsed, tweenDuration);
+      console.log(i.toFixed(2), c);
       await utils.wait(tweenRate);
     }
-    console.log("done", tweenElapsed);
+    console.log("done", tweenElapsed, end);
 
     // console.log(this.barCount);
     // this.barCount = newVizConfig.barCount;
