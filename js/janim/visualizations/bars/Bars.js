@@ -23,10 +23,6 @@ export default class Bars {
 
   async init(scene) {
 
-    // if (this.vizObj) {
-    //   this._scene.remove(this.vizObj);
-    // }
-
     this._scene = scene;
     this.vizObj = new THREE.Object3D();
 
@@ -57,9 +53,13 @@ export default class Bars {
     console.log(scObj);
   }
 
+  sharedDataset = {};
+
   async updateDataState(opts) {
     console.log("updateDataState");
-    console.log(opts);
+    console.log(opts.newVal);
+    console.log(this.sharedDataset);
+
 
     await this.update(this.vizObj);
     
