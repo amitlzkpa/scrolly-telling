@@ -53,20 +53,21 @@ export default class Bars {
     return this.vizObj;
   }
 
-  async update(scObj) {}
+  async update(scObj) {
+    console.log(scObj);
+  }
 
   async updateDataState(opts) {
     console.log("updateDataState");
     console.log(opts);
-    console.log(this.spacing);
-    this.spacing = 40;
-    console.log(this.spacing);
+
+    await this.update(this.vizObj);
+    
     // let newBarsTotal = Math.sqrt(opts.data.length);
     // console.log("newBarsTotal", newBarsTotal);
     // let newBarCount = opts.data.length;
     // console.log("newBarCount", newBarCount);
 
-    await this.init(this._scene);
     // this.vizObj.position.set(0, (this.size / 2) + (this.size * opts.newVal), 0);
   }
 }
