@@ -50,16 +50,16 @@ export default class Bars {
   }
 
   async update(scObj) {
-    console.log(scObj);
+    // console.log(scObj);
   }
 
   sharedDataset = {};
 
-  async updateDataState(opts) {
-    console.log("updateDataState");
-    console.log(opts.newVal);
-    console.log(this.sharedDataset);
+  async updateDataState(stateChangeOpts) {
 
+    console.log("oldState", stateChangeOpts.oldState);
+    console.log("newState", stateChangeOpts.newState);
+    console.log("updateOpts", stateChangeOpts.updateOpts);
 
     await this.update(this.vizObj);
     

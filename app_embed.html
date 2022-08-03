@@ -168,10 +168,16 @@
         let updateDataStateOpts = {
           tgtLabel: "sample-dataset",
           newVal: updVal,
-          tweenDuration: 2000,
-          delay: 0,
+          updateOpts: {
+            tweenDuration: 2000,
+            delay: 0,
+          }
         };
-        janim.setDatasetState(updateDataStateOpts);
+        await janim.setDatasetState(updateDataStateOpts);
+
+        let newDatasetState = JSON.parse(JSON.stringify(updateDataStateOpts));
+        // newDatasetState.newVal.data[0].z = 12;
+        await janim.setDatasetState(newDatasetState);
         
         // window.addEventListener("mousemove", (event) => {
         //   let yRat = event.clientY / document.documentElement.clientHeight;

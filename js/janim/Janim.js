@@ -12,6 +12,7 @@ import Axes3D from "./helpers/Axes3D.js";
 import Bars from "./visualizations/bars/Bars.js";
 import Particles from "./visualizations/particles/Particles.js";
 import Cube from "./visualizations/movement/basic/Cube.js";
+import utils from "./utils/index.js";
 
 let vizTypesAvailable = [Bars, Particles, Cube];
 
@@ -255,6 +256,11 @@ export default class Janim {
 
   //-----------------------------------------------------------------------------
 
+  defaultUpdateOpts = {
+    tweenDuration: 0,
+    delay: 0
+  };
+
   datasetOriginals = [];
   activeDatasets = [];
 
@@ -267,14 +273,7 @@ export default class Janim {
     // check if vizs need to be updated
   }
 
-  defaultUpdateDataStateOpts = {
-    data: [
-      { x: 10, y: 10, z: 6 },
-      { x: 10, y: 20, z: 2 },
-      { x: 20, y: 10, z: 13 },
-      { x: 20, y: 20, z: 4 }
-    ]
-  };
+  currState = {};
 
   /**
     Update the state of data.
@@ -284,11 +283,25 @@ export default class Janim {
       await janim.setDatasetState(updateDataStateOpts);
 
   */
-  async setDatasetState(opts) {
+  async setDatasetState(stateUpdateOpts) {
 
-    let _opts = { ...this.defaultUpdateDataStateOpts, ...(opts || {}) };
-    this.vizs.forEach(v => v.updateDataState(_opts));
+    let needsUpdate = await utils.performStateDiffCheck({
+      stateA: this.currState,
+      stateB: stateUpdateOpts.newVal
+    });
 
+    console.log("needsUpdate", needsUpdate);
+
+    if (needsUpdate) {
+      let mergedUpdateOpts = { ...this.defaultUpdateOpts, ...(stateUpdateOpts.updateOpts || {}) };
+      this.vizs.forEach(v => v.updateDataState({
+        oldState: this.currState,
+        newState: stateUpdateOpts.newVal,
+        updateOpts: mergedUpdateOpts
+      }));
+    }
+
+    this.currState = stateUpdateOpts.newVal;
   }
 
   //-----------------------------------------------------------------------------
