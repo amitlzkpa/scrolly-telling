@@ -1,7 +1,20 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.122.0/build/three.module.js";
 
 function stateToVizConfig(state) {
-  let sides = Math.floor(Math.sqrt(state.data.length))
+  let sides = 8;
+  let backupBarCount = 64;
+
+  if (
+       (!state)
+    || (!state.data)
+    || (!state.data.length)
+    || (!Array.isArray(state.data))
+  ) {
+    sides = backupBarCount;
+  } else {
+    sides = Math.floor(Math.sqrt(state.data.length))
+  }
+
   let configVars = {
     barCount: sides
   };
@@ -73,12 +86,5 @@ export default class Bars {
     console.log(newVizConfig);
 
     await this.update(this.vizObj);
-    
-    // let newBarsTotal = Math.sqrt(opts.data.length);
-    // console.log("newBarsTotal", newBarsTotal);
-    // let newBarCount = opts.data.length;
-    // console.log("newBarCount", newBarCount);
-
-    // this.vizObj.position.set(0, (this.size / 2) + (this.size * opts.newVal), 0);
   }
 }
