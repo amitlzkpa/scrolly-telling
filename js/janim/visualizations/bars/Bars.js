@@ -1,5 +1,6 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.122.0/build/three.module.js";
 import * as utils from "../../utils/index.js";
+import * as tweenFn from "../../tweenFn/index.js";
 
 function stateToVizConfig(state) {
   let sides = 8;
@@ -99,18 +100,36 @@ export default class Bars {
     let end = stateChangeOpts.newState.data.length;
     let span = end - start;
     let isDecreasing = end < start;
-    console.log("start", tweenElapsed, start);
-    while(tweenElapsed <= tweenDuration) {
-      let i = tweenElapsed / tweenDuration;
-      let spanI = i * span;
+    // let fnLabels = [
+    //   "easeInSine",
+    //   "easeOutSine",
+    //   "easeInOutSine",
+    //   "easeInCubic",
+    //   "easeOutCubic",
+    //   "easeInOutCubic",
+    // ];
+    let fnLabels = tweenFn.availableTweenLabels();
+    console.log(fnLabels);
+    let tweenFns = fnLabels.map(lbl => tweenFn.labelToFn(lbl));
+    console.log(tweenFns);
+    let us = tweenFns.map(fn => fn(0.2));
+    console.log(us);
+    let vs = tweenFns.map(fn => fn(0.8));
+    console.log(vs);
 
-      let c = spanI + ((isDecreasing ? 1 : -1) * start);
+    // console.log("start", tweenElapsed, start);
+    // while(tweenElapsed <= tweenDuration) {
+    //   let i = tweenElapsed / tweenDuration;
+    //   let spanI = i * span;
 
-      tweenElapsed += tweenRate;
-      console.log(i.toFixed(2), c);
-      await utils.wait(tweenRate);
-    }
-    console.log("done", tweenElapsed, end);
+    //   // console.log(`i: ${i.toFixed(2)} || ${tweenFns.map(fn => fn(i).toFixed(2))}`);
+
+    //   // let c = spanI + ((isDecreasing ? 1 : -1) * start);
+
+    //   tweenElapsed += tweenRate;
+    //   await utils.wait(tweenRate);
+    // }
+    // console.log("done", tweenElapsed, end);
 
     // console.log(this.barCount);
     // this.barCount = newVizConfig.barCount;
