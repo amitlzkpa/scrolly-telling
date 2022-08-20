@@ -229,7 +229,8 @@ export default class Janim {
   */
   async addViz(opts) {
     document.dispatchEvent(preAddVizEvt);
-    let vizType = vizTypesAvailable.find((v) => v.name === opts.name);
+    let tgtName = opts.name.toLowerCase();
+    let vizType = vizTypesAvailable.find((v) => v.name.toLowerCase() === tgtName);
     let vizInstance = new vizType();
 
     if (!("updateDataState" in vizInstance)) {
