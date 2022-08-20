@@ -3,22 +3,20 @@ import * as utils from "../../utils/index.js";
 import * as tweenFn from "../../tweenFn/index.js";
 
 function stateToVizConfig(state) {
-  let sides = 8;
   let backupBarCount = 64;
+  let returnBarCount = backupBarCount;
 
   if (
-       (!state)
-    || (!state.data)
-    || (!state.data.length)
-    || (!Array.isArray(state.data))
+       (state)
+    && (state.data)
+    && (state.data.length)
+    && (Array.isArray(state.data))
   ) {
-    sides = backupBarCount;
-  } else {
-    sides = Math.floor(Math.sqrt(state.data.length))
+    returnBarCount = Math.ceil(Math.sqrt(state.data.length));
   }
 
   let configVars = {
-    barCount: sides
+    barCount: returnBarCount
   };
   return configVars;
 }
@@ -37,7 +35,7 @@ export default class Bars {
   constructor() {
     this.spacing = 10;
     this.offset = 5;
-    this.barCount = 30;
+    this.barCount = 0;
     this.height = 100;
 
     this.vizObj = null;
@@ -80,12 +78,19 @@ export default class Bars {
 
   async updateDataState(stateChangeOpts) {
 
-    console.log("oldState", stateChangeOpts.oldState);
-    console.log("newState", stateChangeOpts.newState);
-    console.log("updateOpts", stateChangeOpts.updateOpts);
+    let isFirstUpdate = !stateChangeOpts.oldState
+                      || typeof stateChangeOpts.oldState !== 'object'
+                      || Object.keys(stateChangeOpts.oldState);
+    
+    if (isFirstUpdate) {
+      let vizConfig = stateToVizConfig(stateChangeOpts.newState);
+      this.barCount = vizConfig.barCount;
+      console.log(this.barCount);
+      this._scene.remove(this.vizObj);
+      await this.init(this._scene);
+    }
 
-    // let newVizConfig = stateToVizConfig(stateChangeOpts.newState);
-    // console.log(newVizConfig);
+    return;
 
     let tweenRate = 100;
     let tweenDuration = stateChangeOpts.updateOpts.tweenDuration;
@@ -93,7 +98,7 @@ export default class Bars {
 
     await utils.wait(delay);
 
-    // CONTINUE HERE: check timetweening between start, end vals based on tweenDuration and tweenRate
+    // CONTINUE HERE: apply tween to some variable
     let tweenElapsed = 0;
     // let start = stateChangeOpts.oldState.data.length;
     let start = this.barCount;

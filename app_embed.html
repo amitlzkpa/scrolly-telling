@@ -95,19 +95,19 @@
         });
       });
 
-      let sampleDataset = {
-        uuid: "aeb88c91-13c5-4c2d-9dbe-033f7930d5ce",
-        label: "sample-dataset",
-        data: [
-         { x: 10, y: 10, z: 4 },
-         { x: 10, y: 20, z: 7 },
-         { x: 20, y: 10, z: 3 },
-         { x: 20, y: 20, z: 10 }
-        ]
-      };
+      // let sampleDataset = {
+      //   uuid: "aeb88c91-13c5-4c2d-9dbe-033f7930d5ce",
+      //   label: "sample-dataset",
+      //   data: [
+      //    { x: 10, y: 10, z: 4 },
+      //    { x: 10, y: 20, z: 7 },
+      //    { x: 20, y: 10, z: 3 },
+      //    { x: 20, y: 20, z: 10 }
+      //   ]
+      // };
 
       let defaultArgs = { 
-        vizType: "Bars",
+        vizType: "ScrollYBox",
         motionTrigger: "scrollY",
         tweenMethod: "linear"
        };
@@ -117,8 +117,8 @@
           containerId: "janimContainer",
           autoUpdate: true,
           clearColor: "#222222",
-          addGroundPlane: true,
-          addGrid: true,
+          addGroundPlane: false,
+          addGrid: false,
           // groundPlaneColor: "#dedede",
           debugMode: true,
         };
@@ -137,7 +137,13 @@
 
         // ------------------------------------------------
 
-        await janim.addDataset(sampleDataset);
+        // await janim.addDataset(sampleDataset);
+
+        let updateDataStateOpts = {
+          newVal: { "yPosNormalized": 0 },
+          duration: 0
+        };
+        await janim.setDatasetState(updateDataStateOpts);
 
         // ------------------------------------------------
 
@@ -156,37 +162,46 @@
         
         // ------------------------------------------------
 
-        let updVal = {
-          data: [
-          { x: 10, y: 10, z: 6 },
-          { x: 10, y: 20, z: 2 },
-          { x: 20, y: 10, z: 13 },
-          { x: 20, y: 20, z: 4 }
-          ]
-        };
+        // let updVal = {
+        //   data: [
+        //   { x: 10, y: 10, z: 6 },
+        //   { x: 10, y: 20, z: 2 },
+        //   { x: 20, y: 10, z: 13 },
+        //   { x: 20, y: 20, z: 4 }
+        //   ]
+        // };
 
-        let updateDataStateOpts = {
-          tgtLabel: "sample-dataset",
-          newVal: updVal,
-          updateOpts: {
-            tweenDuration: 2000,
-            delay: 0,
-          }
-        };
-        await janim.setDatasetState(updateDataStateOpts);
+        // let updateDataStateOpts = {
+        //   tgtLabel: "sample-dataset",
+        //   newVal: updVal,
+        //   updateOpts: {
+        //     tweenDuration: 2000,
+        //     delay: 0,
+        //   }
+        // };
+        // await janim.setDatasetState(updateDataStateOpts);
 
-        let newDatasetState = JSON.parse(JSON.stringify(updateDataStateOpts));
-        newDatasetState.newVal.data[0].z = 12;
-        await janim.setDatasetState(newDatasetState);
+        // let newDatasetState = JSON.parse(JSON.stringify(updateDataStateOpts));
+        // newDatasetState.newVal.data[0].z = 12;
+        // await janim.setDatasetState(newDatasetState);
         
-        // window.addEventListener("mousemove", (event) => {
-        //   let yRat = event.clientY / document.documentElement.clientHeight;
-        //   let updateDataStateOpts = {
-        //     varName: "yRat",
-        //     newVal: yRat,
-        //     duration: 2000
-        //   };
-        // });
+        // // window.addEventListener("mousemove", (event) => {
+        // //   let yPosNormalized = event.clientY / document.documentElement.clientHeight;
+        // //   let updateDataStateOpts = {
+        // //     varName: "yPosNormalized",
+        // //     newVal: yPosNormalized,
+        // //     duration: 2000
+        // //   };
+        // // });
+
+        window.addEventListener("mousemove", async (event) => {
+          let yPosNormalized = event.clientY / document.documentElement.clientHeight;
+          let updateDataStateOpts = {
+            newVal: { "yPosNormalized": yPosNormalized },
+            duration: 0
+          };
+          await janim.setDatasetState(updateDataStateOpts);
+        });
 
       }
 

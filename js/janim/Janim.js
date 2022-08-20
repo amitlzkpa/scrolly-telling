@@ -12,9 +12,10 @@ import Axes3D from "./helpers/Axes3D.js";
 import Bars from "./visualizations/bars/Bars.js";
 import Particles from "./visualizations/particles/Particles.js";
 import Cube from "./visualizations/movement/basic/Cube.js";
+import ScrollYBox from "./visualizations/box/ScrollYBox.js";
 import * as utils from "./utils/index.js";
 
-let vizTypesAvailable = [Bars, Particles, Cube];
+let vizTypesAvailable = [Bars, Particles, Cube, ScrollYBox];
 
 //-----------------------------------------------------------------------------
 
@@ -291,8 +292,6 @@ export default class Janim {
       stateB: stateUpdateOpts.newVal
     });
 
-    console.log("state changed needsUpdate", needsUpdate);
-
     if (needsUpdate) {
       let mergedUpdateOpts = { ...this.defaultUpdateOpts, ...(stateUpdateOpts.updateOpts || {}) };
       this.vizs.forEach(v => v.updateDataState({
@@ -317,7 +316,17 @@ export default class Janim {
     }
 
     this.vizs.push(vizInstance);
-    let o = await vizInstance.init();
-        this.clientObject3Ds.add(o);
+    let o = await vizInstance.init(this.scene);
+    this.clientObject3Ds.add(o);
+
+    for (let newDataset of this.activeDatasets) {
+      let stateChangeOpts = {
+        oldState: {},
+        newState: newDataset,
+        updateOpts: this.defaultUpdateOpts
+      };
+      await vizInstance.updateDataState(stateChangeOpts);
+    }
+
   }
 }
