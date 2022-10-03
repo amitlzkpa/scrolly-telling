@@ -6,7 +6,7 @@
   "tasks": {
     "dev": {
       "name": "dev",
-      "command": "node index.js",
+      "command": "npm run dev",
       "runAtStart": true
     }
   }
