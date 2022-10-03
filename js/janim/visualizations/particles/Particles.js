@@ -1,4 +1,4 @@
-import * as THREE from "https://cdn.skypack.dev/three@0.134.0/build/three.module.js";
+import * as THREE from "https://cdn.skypack.dev/three@0.122.0/build/three.module.js";
 
 function getCol(pRat) {
   return new THREE.Color(1.7 - pRat, 1.2 - pRat, 0);

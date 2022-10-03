@@ -18,7 +18,7 @@
   </head>
   
   <body>
-    <header class="disappearOnHover1_Target hidden">
+    <header class="disappearOnHover1_Target hidden" style="position: fixed; top: 0; width: 100%">
       <div id="navbar-container">
         <div style="padding-left: 3rem;">
           <a href="/" target="_blank" style="text-decoration: none;">
@@ -72,7 +72,7 @@
     <div id="janimContainer" style="flex: 1; width: 100%;"></div>
 
     <script type="module">
-      import Janim from "./janim/Janim.js";
+      import Janim from "./js/janim/Janim.js";
 
       let disappearOnHover1_Target = document.querySelectorAll("[class*=disappearOnHover1_Target]");
 
@@ -94,6 +94,14 @@
           });
         });
       });
+
+      
+      let defaultArgs = { 
+        vizType: "Bars",
+        datasets: "{ data:[] }",
+        motionTrigger: "scrollY",
+        tweenMethod: "linear"
+       };
 
       async function main() {
         let opts = {
@@ -121,14 +129,30 @@
         // ------------------------------------------------
 
         let urlParams = new URLSearchParams(window.location.search);
+        let parsedArgsFmUrl = {
+          vizType: urlParams.get("vizType"),
+          datasets: urlParams.get("datasets"),
+          motionTrigger: urlParams.get("motionTrigger"),
+          tweenMethod: urlParams.get("tweenMethod")
+        };
+        let compiledArgsObj = { ...parsedArgsFmUrl, ...defaultArgs };
+        let cleanedUpArgsObj = Janim.cleanupVizArgObj(compiledArgsObj);
+        let vizOpts = {
+          name: cleanedUpArgsObj.vizType
+        };
 
-        if (urlParams.has("vizType")) {
-          let vizType = urlParams.get("vizType");
-          let vizOpts = {
-            name: vizType
+        await janim.addViz(vizOpts);
+        
+        window.addEventListener("mousemove", (event) => {
+
+          let yRat = event.clientY / document.documentElement.clientHeight;
+          let updateDataStateOpts = {
+            varName: "yRat",
+            newVal: yRat
           };
-          await janim.addViz(vizOpts);
-        }
+          janim.updateDataState(updateDataStateOpts);
+
+        });
 
       }
 

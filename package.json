@@ -1,0 +1,24 @@
+{
+  "name": "scrolly-telling",
+  "version": "0.0.1",
+  "description": "",
+  "main": "scrolly-telling.js",
+  "scripts": {
+    "dev": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amitlzkpa/scrolly-telling.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amitlzkpa/scrolly-telling/issues"
+  },
+  "homepage": "https://github.com/amitlzkpa/scrolly-telling#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "nodemon": "^2.0.20"
+  }
+}

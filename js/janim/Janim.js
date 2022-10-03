@@ -1,18 +1,19 @@
-import * as THREE from "https://cdn.skypack.dev/three@0.134.0/build/three.module.js";
+import * as THREE from "https://cdn.skypack.dev/three@0.122.0/build/three.module.js";
 
-import { OrbitControls } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/controls/OrbitControls";
+import { OrbitControls } from "https://cdn.skypack.dev/three@0.122.0/examples/jsm/controls/OrbitControls";
 
-import { EffectComposer } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/postprocessing/EffectComposer";
-import { RenderPass } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/postprocessing/RenderPass";
-import { UnrealBloomPass } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/postprocessing/UnrealBloomPass.js";
-import { ShaderPass } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/postprocessing/ShaderPass";
-import { FXAAShader } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/shaders/FXAAShader";
+import { EffectComposer } from "https://cdn.skypack.dev/three@0.122.0/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "https://cdn.skypack.dev/three@0.122.0/examples/jsm/postprocessing/RenderPass";
+import { UnrealBloomPass } from "https://cdn.skypack.dev/three@0.122.0/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { ShaderPass } from "https://cdn.skypack.dev/three@0.122.0/examples/jsm/postprocessing/ShaderPass";
+import { FXAAShader } from "https://cdn.skypack.dev/three@0.122.0/examples/jsm/shaders/FXAAShader";
 
 import Axes3D from "./helpers/Axes3D.js";
 import Bars from "./visualizations/bars/Bars.js";
 import Particles from "./visualizations/particles/Particles.js";
+import Cube from "./visualizations/movement/basic/Cube.js";
 
-let vizTypesAvailable = [Bars, Particles];
+let vizTypesAvailable = [Bars, Particles, Cube];
 
 //-----------------------------------------------------------------------------
 
@@ -22,6 +23,20 @@ let preUpdateEvt = new CustomEvent("janim-pre-update");
 let postUpdateEvt = new CustomEvent("janim-post-update");
 let preAddVizEvt = new CustomEvent("janim-pre-add-viz");
 let postAddVizEvt = new CustomEvent("janim-post-add-viz");
+
+//-----------------------------------------------------------------------------
+
+function fallback_viz_updateDataState() {
+  console.log("fallback_viz_updateDataState");
+}
+
+function fallback_viz_init() {
+  console.log("fallback_viz_init");
+}
+
+function fallback_viz_update() {
+  console.log("fallback_viz_update");
+}
 
 //-----------------------------------------------------------------------------
 
@@ -47,6 +62,12 @@ let defaultOpts = {
 //-----------------------------------------------------------------------------
 
 export default class Janim {
+  static cleanupVizArgObj(inArgs) {
+    console.log(inArgs);
+    inArgs.c = true;
+    return inArgs;
+  }
+
   //-----------------------------------------------------------------------------
 
   activeOpts = {};
@@ -166,6 +187,8 @@ export default class Janim {
     // }, 400);
   }
 
+  //-----------------------------------------------------------------------------
+
   /**
     Update the environment
     Awaits till the update is done.
@@ -180,8 +203,6 @@ export default class Janim {
     this.vizHelpers.forEach((g) => g.update(this.clientObject3Ds));
     document.dispatchEvent(postUpdateEvt);
   }
-
-  //-----------------------------------------------------------------------------
 
   /**
     Add a visualization to the environment
@@ -200,11 +221,46 @@ export default class Janim {
     document.dispatchEvent(preAddVizEvt);
     let vizType = vizTypesAvailable.find((v) => v.name === opts.name);
     let vizInstance = new vizType();
+
+    if (!("updateDataState" in vizInstance)) {
+      // console.log(`Applying fallback_viz_updateDataState to ${vizInstance.constructor.name}`);
+      vizInstance.updateDataState = fallback_viz_updateDataState;
+    }
+
+    if (!("init" in vizInstance)) {
+      // console.log(`Applying fallback_viz_init to ${vizInstance.constructor.name}`);
+      vizInstance.init = fallback_viz_init;
+    }
+
+    if (!("update" in vizInstance)) {
+      // console.log(`Applying fallback_viz_update to ${vizInstance.constructor.name}`);
+      vizInstance.update = fallback_viz_update;
+    }
+
     await this.registerVizToScene(vizInstance);
 
     document.dispatchEvent(postAddVizEvt);
     if (this.activeOpts.autoUpdate) await this.updateWorld();
     return vizInstance;
+  }
+
+  //-----------------------------------------------------------------------------
+
+  defaultUpdateDataSateOpts = {};
+
+  /**
+    Update the state of data.
+    Awaits till the update is done.
+
+    @example
+      await janim.updateDataState();
+
+  */
+  async updateDataState(opts) {
+
+    let _opts = { ...this.defaultUpdateDataSateOpts, ...(opts || {}) };
+    this.vizs.forEach(v => v.updateDataState(_opts));
+
   }
 
   //-----------------------------------------------------------------------------
