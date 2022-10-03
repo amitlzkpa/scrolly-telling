@@ -12,8 +12,10 @@ import Axes3D from "./helpers/Axes3D.js";
 import Bars from "./visualizations/bars/Bars.js";
 import Particles from "./visualizations/particles/Particles.js";
 import Cube from "./visualizations/movement/basic/Cube.js";
+import ScrollYBox from "./visualizations/box/ScrollYBox.js";
+import * as utils from "./utils/index.js";
 
-let vizTypesAvailable = [Bars, Particles, Cube];
+let vizTypesAvailable = [Bars, Particles, Cube, ScrollYBox];
 
 //-----------------------------------------------------------------------------
 
@@ -36,6 +38,16 @@ function fallback_viz_init() {
 
 function fallback_viz_update() {
   console.log("fallback_viz_update");
+}
+
+
+let datasetUtils = {
+  containsCheck(srcCollection, itemToCheck) {
+    return false;
+  },
+  cleanupDatasetInput(datasetObj) {
+    return datasetObj;
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -63,7 +75,6 @@ let defaultOpts = {
 
 export default class Janim {
   static cleanupVizArgObj(inArgs) {
-    console.log(inArgs);
     inArgs.c = true;
     return inArgs;
   }
@@ -219,7 +230,8 @@ export default class Janim {
   */
   async addViz(opts) {
     document.dispatchEvent(preAddVizEvt);
-    let vizType = vizTypesAvailable.find((v) => v.name === opts.name);
+    let tgtName = opts.name.toLowerCase();
+    let vizType = vizTypesAvailable.find((v) => v.name.toLowerCase() === tgtName);
     let vizInstance = new vizType();
 
     if (!("updateDataState" in vizInstance)) {
@@ -246,21 +258,50 @@ export default class Janim {
 
   //-----------------------------------------------------------------------------
 
-  defaultUpdateDataSateOpts = {};
+  defaultUpdateOpts = {
+    tweenDuration: 0,
+    delay: 0
+  };
+
+  datasetOriginals = [];
+  activeDatasets = [];
+
+  async addDataset(datasetObj) {
+    let cleanedUpInput = datasetUtils.cleanupDatasetInput(datasetObj);
+    if (!datasetUtils.containsCheck(this.activeDatasets, cleanedUpInput)) {
+      this.datasetOriginals.push(JSON.parse(JSON.stringify(cleanedUpInput)));
+      this.activeDatasets.push(JSON.parse(JSON.stringify(cleanedUpInput)));
+    }
+    // check if vizs need to be updated
+  }
+
+  currState = {};
 
   /**
     Update the state of data.
     Awaits till the update is done.
 
     @example
-      await janim.updateDataState();
+      await janim.setDatasetState(updateDataStateOpts);
 
   */
-  async updateDataState(opts) {
+  async setDatasetState(stateUpdateOpts) {
 
-    let _opts = { ...this.defaultUpdateDataSateOpts, ...(opts || {}) };
-    this.vizs.forEach(v => v.updateDataState(_opts));
+    let needsUpdate = await utils.performStateDiffCheck({
+      stateA: this.currState,
+      stateB: stateUpdateOpts.newVal
+    });
 
+    if (needsUpdate) {
+      let mergedUpdateOpts = { ...this.defaultUpdateOpts, ...(stateUpdateOpts.updateOpts || {}) };
+      this.vizs.forEach(v => v.updateDataState({
+        oldState: this.currState,
+        newState: stateUpdateOpts.newVal,
+        updateOpts: mergedUpdateOpts
+      }));
+    }
+
+    this.currState = stateUpdateOpts.newVal;
   }
 
   //-----------------------------------------------------------------------------
@@ -275,7 +316,17 @@ export default class Janim {
     }
 
     this.vizs.push(vizInstance);
-    let o = await vizInstance.init();
-        this.clientObject3Ds.add(o);
+    let o = await vizInstance.init(this.scene);
+    this.clientObject3Ds.add(o);
+
+    for (let newDataset of this.activeDatasets) {
+      let stateChangeOpts = {
+        oldState: {},
+        newState: newDataset,
+        updateOpts: this.defaultUpdateOpts
+      };
+      await vizInstance.updateDataState(stateChangeOpts);
+    }
+
   }
 }
